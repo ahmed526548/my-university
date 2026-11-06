@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  BookOpen, 
-  Bot, 
-  Calendar, 
-  Search, 
-  Download, 
-  Eye, 
-  ChevronRight, 
+import {
+  BookOpen,
+  Bot,
+  Calendar,
+  Search,
+  Download,
+  Eye,
+  ChevronRight,
   Send,
   User,
   Clock,
@@ -19,6 +19,7 @@ const App = () => {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
   const [previewModal, setPreviewModal] = useState({ isOpen: false, title: '', content: '', lang: '' });
   const [chatMessages, setChatMessages] = useState([
     {
@@ -38,6 +39,14 @@ const App = () => {
     }
   }, [chatMessages, currentView]);
 
+  // إخفاء الإشعار بعد 3 ثوانٍ
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => setToastMessage(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
+
   // بيانات المواد
   const subjectsData = [
     { id: 1, name: '(Comm Presentation)', code: 'HU101' },
@@ -50,29 +59,29 @@ const App = () => {
     { id: 8, name: '(Human Rights)', code: 'HU103' },
   ];
 
-  // بيانات المحاضرات الشاملة مع التلخيصات המبسطة
+  // بيانات المحاضرات الشاملة مع التلخيصات
   const allLecturesData = {
     'CS101': [ // Fundamentals
-      { 
-        id: 1, 
-        title: 'المحاضرة الأولى: Introduction (مقدمة)', 
-        doctor: 'د. محمد قايد', 
+      {
+        id: 1,
+        title: 'المحاضرة الأولى: Introduction (مقدمة)',
+        doctor: 'د. محمد قايد',
         hasContent: true,
         summaryAr: `أهلاً بك في عالم علوم الحاسب! 🚀\n\nبكل بساطة، الحاسب الآلي هو آلة ذكية جداً. إحنا بنديلها بيانات خام (Input)، هي بتفكر فيها وتعالجها (Processing)، وبعدين تطلع لنا معلومات مفيدة (Output) وتقدر تحفظها لوقت تاني (Storage).\n\nليش بنعتمد على الحاسب؟\n⚡ سريع جداً وبينجز ملايين العمليات في ثانية.\n🎯 دقيق ومش بيغلط لو عطيته الأوامر صح.\n📚 يقدر يخزن كميات مهولة من البيانات.\n\nتذكر دايماً: الحاسوب مقسوم لجزئين أساسيين:\n1. المكونات المادية (Hardware): الحاجات اللي تقدر تمسكها بإيدك.\n2. البرمجيات (Software): الروح اللي بتشغل الجهاز.`,
         summaryEn: `Welcome to the world of Computer Science! 🚀\n\nSimply put, a computer is an incredibly smart machine. We give it raw data (Input), it thinks and processes it (Processing), then gives us useful information (Output), and can store it for later (Storage).\n\nWhy do we rely on computers?\n⚡ Super Fast: Can do millions of operations per second.\n🎯 Accurate: It doesn't make mistakes if given the right commands.\n📚 Huge Storage Capacity.\n\nAlways remember, a computer is divided into two main parts:\n1. Hardware: The physical components you can touch.\n2. Software: The programs that breathe life into the machine.`
       },
-      { 
-        id: 2, 
-        title: 'المحاضرة الثانية: Number System (أنظمة الأعداد)', 
-        doctor: 'د. محمد قايد', 
+      {
+        id: 2,
+        title: 'المحاضرة الثانية: Number System (أنظمة الأعداد)',
+        doctor: 'د. محمد قايد',
         hasContent: true,
         summaryAr: `أنظمة الأعداد - لغة الكمبيوتر 🔢\n\nإحنا كبشر بنستخدم النظام العشري (Decimal) اللي بيتكون من 10 أرقام (من 0 لـ 9). لكن الكمبيوتر مبياكلش معاه الكلام ده! الكمبيوتر بيفهم بس الكهربا (شغال أو طافي).\n\nعشان كده الكمبيوتر بيستخدم النظام الثنائي (Binary):\n🟢 1 يعني في كهربا (On).\n🔴 0 يعني مفيش كهربا (Off).\n\nأنظمة تانية بنستخدمها في البرمجة:\n- الثماني (Octal): أساسه 8 (من 0 لـ 7).\n- السادس عشر (Hexadecimal): أساسه 16 (من 0 لـ 9، وبعدها من A لـ F). بنستخدمه عشان نختصر الأرقام الثنائية الطويلة جداً!`,
         summaryEn: `Number Systems - The Language of Computers 🔢\n\nAs humans, we use the Decimal system (base 10, numbers 0-9). But computers don't understand that! They only understand electricity (on or off).\n\nThat's why computers use the Binary system (base 2):\n🟢 1 means electricity is ON.\n🔴 0 means electricity is OFF.\n\nOther systems used in computing:\n- Octal (base 8): Uses digits 0-7.\n- Hexadecimal (base 16): Uses digits 0-9 and letters A-F. We use it to shorten very long binary numbers!`
       },
-      { 
-        id: 3, 
-        title: 'المحاضرة الثالثة: Hardware (المكونات المادية)', 
-        doctor: 'د. محمد قايد', 
+      {
+        id: 3,
+        title: 'المحاضرة الثالثة: Hardware (المكونات المادية)',
+        doctor: 'د. محمد قايد',
         hasContent: true,
         summaryAr: `المكونات المادية - جسم الكمبيوتر 🖥️\n\nأي حاجة تقدر تمسكها في الكمبيوتر هي Hardware. وبتتقسم لـ 4 أقسام رئيسية:\n\n1. وحدات الإدخال (Input): زي الكيبورد والماوس، دي اللي بندخل بيها البيانات.\n2. وحدة المعالجة المركزية (CPU): ده "مخ" الكمبيوتر اللي بيفكر ويعمل كل الحسابات.\n3. وحدات الإخراج (Output): زي الشاشة والسماعات، دي اللي بتعرض لنا النتيجة.\n4. الذاكرة والتخزين (Memory & Storage):\n   - الـ RAM (ذاكرة مؤقتة): سريعة بس بتنسى كل حاجة لو الكهربا قطعت.\n   - الـ Hard Disk (تخزين دائم): بطيء شوية بس بيحفظ بياناتك للأبد.`,
         summaryEn: `Hardware - The Body of the Computer 🖥️\n\nAnything physical you can touch in a computer is Hardware. It's divided into 4 main categories:\n\n1. Input Devices: Like keyboard and mouse, used to enter data.\n2. Central Processing Unit (CPU): The "Brain" of the computer that does all calculations.\n3. Output Devices: Like monitors and speakers, used to display results.\n4. Memory & Storage:\n   - RAM (Volatile Memory): Super fast but forgets everything if power is lost.\n   - Hard Disk (Non-volatile): Slower but keeps your files permanently safe.`
@@ -104,7 +113,7 @@ const App = () => {
       time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
     };
     setChatMessages(prev => [...prev, msg]);
-
+    
     // رد تلقائي من البوت
     setTimeout(() => {
       setChatMessages(prev => [...prev, {
@@ -172,9 +181,9 @@ const App = () => {
       day: 'الأربعاء',
       slots: [
         { time: '09:00 AM', items: [{ subject: 'Math 1', doctor: 'د. دعاء', hall: 'مدرج 2 - حكومي' }] },
-        { time: '11:00 AM', items: [{ subject: 'English', doctor: 'د. شيماء', hall: 'مدرج4 - حكومي' }] },
+        { time: '11:00 AM', items: [{ subject: 'English', doctor: 'د. شيماء', hall: 'مدرج 3 - حكومي' }] },
         { time: '01:00 PM', items: [{ subject: 'Electronics', doctor: 'د. شريف', hall: 'مدرج 4 - حكومي' }] },
-        { time: '03:00 PM', items: [{ subject: 'Math 0', doctor: 'د. عبد المنعم', hall: 'مدرج 2 - حكومي' }] }
+        { time: '03:00 PM', items: [{ subject: 'Math 0', doctor: 'د. عبد المنعم', hall: 'قاعة 4 - حكومي' }] }
       ]
     }
   ];
@@ -208,12 +217,23 @@ const App = () => {
     {
       day: 'الأربعاء',
       slots: [
-        { time: '11:00 AM', items: [{ subject: 'English', doctor: 'د. شيماء', hall: 'مدرج 4 - حكومي' }] },
+        { time: '11:00 AM', items: [{ subject: 'English', doctor: 'د. شيماء', hall: 'مدرج 3 - حكومي' }] },
         { time: '01:00 PM', items: [{ subject: 'Electronics', doctor: 'د. شريف', hall: 'مدرج 4 - حكومي' }] },
-        { time: '03:00 PM', items: [{ subject: 'Math 0', doctor: 'د. عبد المنعم', hall: 'مدرج 2 - حكومي' }] }
+        { time: '03:00 PM', items: [{ subject: 'Math 0', doctor: 'د. عبد المنعم', hall: 'قاعة 4 - حكومي' }] }
       ]
     }
   ];
+
+  // مكون عرض الإشعارات
+  const Toast = () => {
+    if (!toastMessage) return null;
+    return (
+      <div className="fixed bottom-6 right-1/2 translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 animate-in slide-in-from-bottom-5 font-bold flex items-center gap-2">
+        <Download className="w-5 h-5" />
+        {toastMessage}
+      </div>
+    );
+  };
 
   // ================= واجهات التطبيق =================
 
@@ -228,15 +248,23 @@ const App = () => {
       }}
     >
       {/* إضاءة حمراء متحركة في الخلفية */}
-      <div className="absolute inset-0 pointer-events-none animate-pulse opacity-40">
-        <div style={{
-          position: 'absolute',
-          top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '80vw', height: '80vw',
-          background: 'radial-gradient(circle, rgba(255,20,20,0.15) 0%, rgba(0,0,0,0) 60%)',
-          borderRadius: '50%'
-        }}></div>
+      <div style={{
+        position: 'absolute',
+        top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '80vw', height: '80vw',
+        background: 'radial-gradient(circle, rgba(255,20,20,0.15) 0%, rgba(0,0,0,0) 60%)',
+        borderRadius: '50%',
+        animation: 'pulse 4s infinite alternate',
+      }}>
+        <style>
+          {`
+            @keyframes pulse {
+              0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+              100% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            }
+          `}
+        </style>
       </div>
 
       <div className="z-10 text-center mb-16">
@@ -280,18 +308,16 @@ const App = () => {
   );
 
   const renderGroups = () => (
-    <div className="min-h-screen bg-[#0a0000] p-6 md:p-12 flex flex-col items-center justify-center relative overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-[#050000] overflow-hidden">
       {/* إضاءة حمراء متحركة في الخلفية */}
-      <div className="absolute inset-0 pointer-events-none animate-pulse opacity-20">
-        <div style={{
-          position: 'absolute',
-          top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '60vw', height: '60vw',
-          background: 'radial-gradient(circle, rgba(255,20,20,0.15) 0%, rgba(0,0,0,0) 60%)',
-          borderRadius: '50%'
-        }}></div>
-      </div>
+      <div style={{
+        position: 'absolute',
+        top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '60vw', height: '60vw',
+        background: 'radial-gradient(circle, rgba(255,20,20,0.15) 0%, rgba(0,0,0,0) 60%)',
+        borderRadius: '50%'
+      }}></div>
 
       <div className="w-full max-w-4xl z-10">
         <button 
@@ -328,7 +354,6 @@ const App = () => {
   );
 
   const renderSchedule = () => {
-    // سيتم عرض جدول جروب 1 أو جروب 2 بناءً على اختيار المستخدم
     const scheduleData = selectedGroup === 'جروب 1' ? scheduleGroup1 : selectedGroup === 'جروب 2' ? scheduleGroup2 : [];
 
     return (
@@ -395,7 +420,7 @@ const App = () => {
   };
 
   const renderSubjects = () => (
-    <div className="min-h-screen bg-[#0a0000] p-6 md:p-12">
+    <div className="min-h-screen bg-[#050000] p-6 md:p-12">
       <button 
         onClick={() => setCurrentView('home')} 
         className="flex items-center text-red-500 hover:text-red-400 mb-8 transition-colors font-bold"
@@ -419,7 +444,7 @@ const App = () => {
       </div>
 
       {/* شبكة المواد */}
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {filteredSubjects.map(subject => (
           <div 
             key={subject.id}
@@ -438,7 +463,7 @@ const App = () => {
   );
 
   const renderLectures = () => (
-    <div className="min-h-screen bg-[#0a0000] p-6 md:p-12 relative">
+    <div className="min-h-screen bg-[#050000] p-6 md:p-12 relative">
       <button 
         onClick={() => setCurrentView('subjects')} 
         className="flex items-center text-red-500 hover:text-red-400 mb-8 transition-colors font-bold"
@@ -511,7 +536,7 @@ const App = () => {
       {/* نافذة معاينة التلخيص (Modal) */}
       {previewModal.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#0a0000] border-2 border-red-900 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-[0_0_50px_rgba(255,0,0,0.2)] animate-in fade-in zoom-in duration-200">
+          <div className="bg-[#0a0000] border-2 border-red-900 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-[0_0_50px_rgba(255,0,0,0.2)]">
             <div className="p-4 border-b border-red-900/50 flex justify-between items-center bg-[#110000] rounded-t-xl">
               <h3 className="text-xl font-bold text-red-500 flex items-center gap-2">
                 <BookOpen className="w-5 h-5" />
@@ -535,14 +560,17 @@ const App = () => {
 
             <div className="p-4 border-t border-red-900/50 bg-[#110000] rounded-b-xl flex justify-end gap-3">
               <button 
-                onClick={() => handleExplain(previewModal.title)}
+                onClick={() => {
+                  setPreviewModal({ ...previewModal, isOpen: false });
+                  handleExplain(previewModal.title);
+                }}
                 className="flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg transition-colors text-sm font-bold shadow-[0_0_10px_rgba(220,38,38,0.3)]"
               >
                 <Bot className="w-4 h-4" /> العودة للمساعد لشرح جزء معين
               </button>
               <button 
                 className="flex items-center gap-2 bg-transparent border border-green-600/50 text-green-500 hover:bg-green-600/10 px-4 py-2 rounded-lg transition-colors text-sm font-bold"
-                onClick={() => alert('تم محاكاة تحميل ملف الـ PDF بنجاح!')}
+                onClick={() => setToastMessage('بدأ تحميل ملف الـ PDF بنجاح!')}
               >
                 <Download className="w-4 h-4" /> تحميل الـ PDF
               </button>
@@ -554,7 +582,7 @@ const App = () => {
   );
 
   const renderBot = () => (
-    <div className="min-h-screen bg-[#0a0000] flex flex-col p-4 md:p-8">
+    <div className="min-h-screen bg-[#050000] p-6 md:p-12 flex flex-col">
       <button 
         onClick={() => setCurrentView('home')} 
         className="flex items-center text-red-500 hover:text-red-400 mb-4 transition-colors font-bold w-fit"
@@ -620,7 +648,7 @@ const App = () => {
   );
 
   return (
-    <div dir="rtl" className="font-sans text-gray-200 selection:bg-red-900 selection:text-white">
+    <div dir="rtl" className="font-sans min-h-screen bg-[#050000] text-gray-200">
       {/* التبديل بين الواجهات */}
       {currentView === 'home' && renderHome()}
       {currentView === 'groups' && renderGroups()}
@@ -628,6 +656,9 @@ const App = () => {
       {currentView === 'lectures' && renderLectures()}
       {currentView === 'bot' && renderBot()}
       {currentView === 'schedule' && renderSchedule()}
+      
+      {/* عرض الإشعارات */}
+      <Toast />
     </div>
   );
 };
